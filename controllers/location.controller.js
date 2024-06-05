@@ -27,7 +27,7 @@ exports.addLocation = async (req, res) => {
           },
         },
       },
-      { new: true, useFindAndModify: false },
+      { new: true, useFindAndModify: false }
     );
 
     // if user is not found
@@ -65,7 +65,7 @@ exports.editLocation = async (req, res) => {
           "locations.$.name": newLocationName,
         },
       },
-      { new: true },
+      { new: true }
     );
 
     // if the location is not found
@@ -103,7 +103,7 @@ exports.deleteLocation = async (req, res) => {
           locations: { _id: locationId },
         },
       },
-      { new: true },
+      { new: true }
     );
 
     // if the location is not found
@@ -127,6 +127,7 @@ exports.deleteLocation = async (req, res) => {
 };
 
 exports.getUser = async (req, res) => {
+  console.log("user");
   try {
     const { params } = req;
     const { username } = params;
@@ -183,3 +184,7 @@ exports.getLocationCsvData = async (req, res) => {
     });
   }
 };
+
+// ENTITY;
+//noti
+//chat
