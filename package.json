@@ -14,7 +14,7 @@
     "server": "nodemon app.js",
     "lint": "eslint ./*.js --fix"
   },
-  "author": "Theodore Kelechukwu Onyejiaku",
+  "author": "Dat Mai",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.6.2",

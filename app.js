@@ -10,6 +10,7 @@ const locationRouter = require("./routes/location.router");
 const friendsRouter = require("./routes/friends.router");
 const messageRouter = require("./routes/message.router");
 const chatRouter = require("./routes/chat.router");
+const usersRouter = require("./routes/users.router");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -18,7 +19,12 @@ const { MONGO_URL } = process.env;
 const http = require("http");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST']
+  }
+});
 
 mongoose
   .connect(MONGO_URL, {
@@ -44,6 +50,7 @@ app.use("/locations", locationRouter);
 app.use("/friends", friendsRouter);
 app.use("/messages", messageRouter);
 app.use("/chat", chatRouter);
+app.use("/users", usersRouter);
 
 io.on('connection', (socket) => {
   console.log('a user connected');
@@ -58,7 +65,7 @@ io.on('connection', (socket) => {
     const user = users.find(user => user.userId === receiverId);
 
     // send the message to the user
-    io.to(user.socketId).emit('getMessage', {
+    io.to(user?.socketId).emit('getMessage', {
       senderId,
       message
     });
