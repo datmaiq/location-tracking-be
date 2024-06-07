@@ -15,6 +15,11 @@ const PORT = process.env.PORT || 8000;
 const app = express();
 const { MONGO_URL } = process.env;
 
+const http = require("http");
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
+
 mongoose
   .connect(MONGO_URL, {
     useNewUrlParser: true,
@@ -37,9 +42,45 @@ app.use("/auth", authRouter);
 app.use("/autocomplete", autocompleteRouter);
 app.use("/locations", locationRouter);
 app.use("/friends", friendsRouter);
-app.use("/message", messageRouter);
+app.use("/messages", messageRouter);
 app.use("/chat", chatRouter);
 
-app.listen(PORT, () => {
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  socket.on('addUser', (userId) => {
+    // add a user to the list
+    addUser(userId, socket.id);
+    // send the list of users to the client
+    io.emit('getUsers', users);
+  });
+  socket.on('sendMessage', ({ senderId, receiverId, message }) => {
+    // find the user that we want to send the message to
+    const user = users.find(user => user.userId === receiverId);
+
+    // send the message to the user
+    io.to(user.socketId).emit('getMessage', {
+      senderId,
+      message
+    });
+  });
+  // when the user disconnects
+  socket.on('disconnect', () => {
+    console.log('a user disconnected');
+    // remove user from the list
+    users = users.filter(user => user.socketId !== socket.id);
+    io.emit('getUsers', users);
+  });
+});
+
+// list of users
+let users = [];
+
+// add user to the list
+function addUser(userId, socketId) {
+  // if a user is not on the list, add it
+  !users.some(user => user.userId === userId) && users.push({ userId, socketId });
+}
+
+server.listen(PORT, () => {
   console.log("Server started on port", PORT);
 });

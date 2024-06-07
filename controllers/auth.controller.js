@@ -42,6 +42,7 @@ exports.signup = async (req, res) => {
       data: null,
     });
   } catch (error) {
+    console.log(error)
     res.status(500).json({
       message: 'Internal Server Error',
       data: null,

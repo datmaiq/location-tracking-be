@@ -1,71 +1,42 @@
 // message.controller.js
-
 const Message = require("../model/Message.model");
-const User = require("../model/User.model");
 
-exports.sendMessage = async (req, res) => {
+exports.createMessage = async (req, res) => {
+  // create a new message
+  const newMessage = new Message(req.body);
+
   try {
-    const { _id: senderId } = req.user;
-    const { receiverId, content } = req.body;
-
-    // Find the receiver to ensure they exist
-    const receiver = await User.findById(receiverId);
-    if (!receiver) {
-      return res.status(404).json({
-        message: "Receiver not found",
-        data: null,
-      });
-    }
-
-    // Create and save the new message
-    const message = new Message({
-      sender: senderId,
-      receiver: receiverId,
-      content,
-    });
-
-    await message.save();
-
-    res.status(200).json({
-      message: "Message sent successfully",
-      data: message,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-      data: null,
-    });
+    // save the message
+    const savedMessage = await newMessage.save();
+    // send the saved message with a 200 status code
+    res.status(200).json(savedMessage);
+  } catch (err) {
+    // send the error with a 500 status code
+    res.status(500).json(err);
   }
 };
 
+// get all the messages of a chat based on the chat id
 exports.getMessages = async (req, res) => {
   try {
-    const { _id: userId } = req.user;
-    const { friendId } = req.params;
-
-    // Find all messages between the user and the friend
+    // find all the messages where the chat id is equal to the chat id passed in the params
     const messages = await Message.find({
-      $or: [
-        { sender: userId, receiver: friendId },
-        { sender: friendId, receiver: userId },
-      ],
-    }).sort({ createdAt: 1 });
+      chatId: req.params.chatId,
+    });
 
-    res.status(200).json({
-      message: "Messages retrieved successfully",
-      data: messages,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-      data: null,
-    });
+    // send the messages with a 200 status code
+    res.status(200).json(messages);
+  }
+  catch (err) {
+    // send the error with a 500 status code
+    res.status(500).json(err);
   }
 };
+
 exports.deleteMessage = async (req, res) => {
   try {
-    const { _id: userId } = req.user;
-    const { messageId } = req.params;
+    const {_id: userId} = req.user;
+    const {messageId} = req.params;
 
     // Find the message to ensure it exists and the user is authorized to delete it
     const message = await Message.findById(messageId);
