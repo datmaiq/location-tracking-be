@@ -26,8 +26,7 @@ exports.getMessages = async (req, res) => {
 
     // send the messages with a 200 status code
     res.status(200).json(messages);
-  }
-  catch (err) {
+  } catch (err) {
     // send the error with a 500 status code
     res.status(500).json(err);
   }
@@ -35,8 +34,8 @@ exports.getMessages = async (req, res) => {
 
 exports.deleteMessage = async (req, res) => {
   try {
-    const {_id: userId} = req.user;
-    const {messageId} = req.params;
+    const { _id: userId } = req.user;
+    const { messageId } = req.params;
 
     // Find the message to ensure it exists and the user is authorized to delete it
     const message = await Message.findById(messageId);
