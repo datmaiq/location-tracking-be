@@ -1,23 +1,21 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const User = require('../model/User.model');
-require('dotenv').config();
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const User = require("../model/User.model");
+require("dotenv").config();
 
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
-const expiresIn = '1h'; // Token expiration time
+const expiresIn = "1h"; // Token expiration time
 
 exports.signup = async (req, res) => {
   try {
-    const {
-      username, password, gender
-    } = req.body;
+    const { username, password, gender, currentLocation } = req.body;
 
     // check if username already exists
     const existingUser = await User.findOne({ username });
 
     if (existingUser) {
       return res.status(400).json({
-        message: 'Username already exists',
+        message: "Username already exists",
       });
     }
 
@@ -25,7 +23,8 @@ exports.signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // get avatar
-    const avatar = "https://img.icons8.com/?size=160&id=492ILERveW8G&format=png"
+    const avatar =
+      "https://img.icons8.com/?size=160&id=492ILERveW8G&format=png";
 
     // create a new user
     const newUser = new User({
@@ -33,18 +32,19 @@ exports.signup = async (req, res) => {
       password: hashedPassword,
       gender,
       profileBanner: avatar,
+      currentLocation,
     });
 
     // save the user to the database
     await newUser.save();
     res.status(200).json({
-      message: 'User created successfully',
+      message: "User created successfully",
       data: null,
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({
-      message: 'Internal Server Error',
+      message: "Internal Server Error",
       data: null,
     });
   }
@@ -58,7 +58,7 @@ exports.signin = async (req, res) => {
     const user = await User.findOne({ username });
     if (!user) {
       return res.status(401).json({
-        message: 'User does not exist',
+        message: "User does not exist",
         data: null,
       });
     }
@@ -68,7 +68,7 @@ exports.signin = async (req, res) => {
 
     if (!passwordMatch) {
       return res.status(401).json({
-        message: 'Invalid username or password',
+        message: "Invalid username or password",
         data: null,
       });
     }
@@ -78,12 +78,12 @@ exports.signin = async (req, res) => {
       expiresIn,
     });
     res.status(200).json({
-      message: 'Signin successful!',
+      message: "Signin successful!",
       data: { token, user },
     });
   } catch (error) {
     res.status(500).json({
-      message: 'Internal Server Error',
+      message: "Internal Server Error",
       data: null,
     });
   }
@@ -95,24 +95,24 @@ exports.authenticate = async (req, res) => {
     const currentUser = await User.findById(_id)
       .populate({
         path: "friends",
-        select: "-password"
+        select: "-password",
       })
       .select("-password");
 
     if (!currentUser) {
       return res.status(401).json({
-        message: 'User does not exist',
+        message: "User does not exist",
         data: null,
       });
     }
 
     res.status(200).json({
-      message: 'Authenticated',
+      message: "Authenticated",
       data: currentUser,
     });
   } catch (error) {
     res.status(500).json({
-      message: 'Internal server error',
+      message: "Internal server error",
       data: null,
     });
   }

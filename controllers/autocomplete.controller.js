@@ -1,20 +1,29 @@
-const NodeGeocoder = require("node-geocoder");
+const axios = require("axios");
 
 exports.autocomplete = async (req, res) => {
+  const { searchKey } = req.params;
+  const url = `https://nominatim.openstreetmap.org/search?addressdetails=1&q=${encodeURIComponent(
+    searchKey
+  )}&format=json`;
+
   try {
-    const { searchKey } = req.params;
+    const response = await axios.get(url);
 
-    const options = {
-      provider: "openstreetmap",
-    };
-    const geocoder = NodeGeocoder(options);
-
-    // use the geocoder to get the latitude, longitude, and details of a location
-    const response = await geocoder.geocode(searchKey);
+    const transformedData = response.data.map((location) => ({
+      latitude: location.lat,
+      longitude: location.lon,
+      city:
+        location.address.city ||
+        location.address.town ||
+        location.address.village ||
+        "",
+      country: location.address.country,
+      formattedAddress: location.display_name,
+    }));
 
     res.status(200).json({
       message: "location(s) found!",
-      data: response,
+      data: transformedData,
     });
   } catch (error) {
     console.log(error);
