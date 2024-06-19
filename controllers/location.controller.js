@@ -54,8 +54,10 @@ exports.editLocation = async (req, res) => {
   try {
     // extract the user's ID
     const { _id } = req.user;
+    // extract location id from path parameter
+    const { locationId } = req.params;
     // extract the location details from the request body
-    const { id: locationId, name: newLocationName } = req.body;
+    const { name: newLocationName } = req.body;
 
     // update the user with new location details
     const updatedUser = await User.findOneAndUpdate(
@@ -93,7 +95,7 @@ exports.deleteLocation = async (req, res) => {
     // extract the user's ID
     const { _id } = req.user;
     // extract location details from the request body
-    const { id: locationId } = req.body;
+    const { locationId } = req.params;
 
     // update the user with new location details
     const location = await User.findOneAndUpdate(
@@ -127,7 +129,6 @@ exports.deleteLocation = async (req, res) => {
 };
 
 exports.getUser = async (req, res) => {
-  console.log("user");
   try {
     const { params } = req;
     const { username } = params;
