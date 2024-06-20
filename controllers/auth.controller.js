@@ -19,14 +19,11 @@ exports.signup = async (req, res) => {
       });
     }
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // get avatar
     const avatar =
       "https://img.icons8.com/?size=160&id=492ILERveW8G&format=png";
 
-    // create a new user
     const newUser = new User({
       username,
       password: hashedPassword,
@@ -35,7 +32,6 @@ exports.signup = async (req, res) => {
       currentLocation,
     });
 
-    // save the user to the database
     await newUser.save();
     res.status(200).json({
       message: "User created successfully",
@@ -73,7 +69,6 @@ exports.signin = async (req, res) => {
       });
     }
 
-    // Generate a JWT token
     const token = jwt.sign({ user }, jwtSecretKey, {
       expiresIn,
     });

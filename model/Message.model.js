@@ -7,6 +7,9 @@ const messageSchema = new mongoose.Schema(
     chatId: {
       type: String,
     },
+    senderId: {
+      type: String,
+    },
     sender: {
       type: String,
     },
@@ -14,7 +17,7 @@ const messageSchema = new mongoose.Schema(
       type: String,
     },
   },
-  {timestamps: true}
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Message", messageSchema);
