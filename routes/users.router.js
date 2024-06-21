@@ -1,10 +1,14 @@
 const express = require("express");
-const { getUser, uploadUserImage} = require("../controllers/users.controller");
+const {
+  getUser,
+  uploadUserImage,
+  getImageById,
+} = require("../controllers/users.controller");
 
 const router = express.Router();
 const multer = require("multer");
-const {GridFsStorage} = require("multer-gridfs-storage");
-const {authMiddleware} = require("../middlewares/auth.middleware");
+const { GridFsStorage } = require("multer-gridfs-storage");
+const { authMiddleware } = require("../middlewares/auth.middleware");
 const upload = multer({ dest: "uploads/" });
 
 const storage = new GridFsStorage({
@@ -14,14 +18,13 @@ const storage = new GridFsStorage({
       const filename = file.originalname;
       const fileInfo = {
         filename: filename,
-        bucketName: 'uploads'
+        bucketName: "uploads",
       };
       resolve(fileInfo);
     });
-  }
+  },
 });
 const uploadV2 = multer({ storage });
-
 
 router.get("/:username", getUser);
 router.post(
@@ -44,5 +47,7 @@ router.post(
   ]),
   uploadUserImage
 );
+
+router.get("/file/:id", getImageById);
 
 module.exports = router;
