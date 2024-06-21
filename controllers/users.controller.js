@@ -35,22 +35,36 @@ const uploadUserImage = async (req, res) => {
 
   const updateData = {};
   if (avatar && avatar.length > 0) {
-    updateData.profileBannerId = avatar[0].id;
+    const avatarId = avatar[0].id;
+    const avatarUrl = `${req.protocol}://${req.get(
+      "host"
+    )}/users/file/${avatarId}`;
+    updateData.profileBanner = avatarUrl;
+    updateData.profileBannerId = avatarId;
   }
   if (coverPhoto && coverPhoto.length > 0) {
-    updateData.coverPhotoId = coverPhoto[0].id;
+    const coverPhotoId = coverPhoto[0].id;
+    const coverPhotoUrl = `${req.protocol}://${req.get(
+      "host"
+    )}/users/file/${coverPhotoId}`;
+
+    updateData.coverPhoto = coverPhotoUrl;
+    updateData.coverPhotoId = coverPhotoId;
   }
 
-  const user = await User.findByIdAndUpdate(
-    userId,
-    { $set: updateData },
-    { new: true }
-  );
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
+  try {
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $set: updateData },
+      { new: true }
+    );
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(201).json({ files: req.files, user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-
-  res.status(201).json({ files: req.files });
 };
 
 // Endpoint to serve images by ID
