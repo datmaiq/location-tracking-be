@@ -13,6 +13,8 @@ const userSchema = new mongoose.Schema(
     gender: { type: String, required: true },
     profileBanner: String,
     coverPhoto: String,
+    profileBannerId: String,
+    coverPhotoId: String,
     currentLocation: locationSchema,
     locations: [locationSchema],
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
