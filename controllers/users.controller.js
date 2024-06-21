@@ -1,4 +1,20 @@
+const multer = require('multer');
+const { GridFsStorage } = require('multer-gridfs-storage');
+const Grid = require('gridfs-stream');
+const methodOverride = require('method-override');
+
 const User = require("../model/User.model");
+const mongoose = require("mongoose");
+
+const conn = mongoose.createConnection(process.env.MONGO_URL)
+// Init gfs
+let gfs;
+
+conn.once('open', () => {
+  // Init stream
+  gfs = Grid(conn.db, mongoose.mongo);
+  gfs.collection('uploads');
+});
 
 const getUser = async (req, res) => {
   try {
@@ -41,4 +57,10 @@ const updateProfile = async (req, res) => {
   }
 };
 
-module.exports = { getUser, updateProfile };
+// Endpoint to upload an image
+
+const uploadUserImage = async (req, res) => {
+  res.status(201).json({ files: req.files });
+}
+
+module.exports = { getUser, updateProfile, uploadUserImage };
