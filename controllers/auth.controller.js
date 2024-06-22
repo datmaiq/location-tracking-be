@@ -4,13 +4,12 @@ const User = require("../model/User.model");
 require("dotenv").config();
 
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
-const expiresIn = "1h"; // Token expiration time
+const expiresIn = "1h";
 
 exports.signup = async (req, res) => {
   try {
     const { username, password, gender, currentLocation } = req.body;
 
-    // check if username already exists
     const existingUser = await User.findOne({ username });
 
     if (existingUser) {
@@ -50,7 +49,6 @@ exports.signin = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Check if the user exists
     const user = await User.findOne({ username });
     if (!user) {
       return res.status(401).json({
@@ -59,7 +57,6 @@ exports.signin = async (req, res) => {
       });
     }
 
-    // Compare the provided password with the hashed password
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {

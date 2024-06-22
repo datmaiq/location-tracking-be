@@ -3,12 +3,10 @@ const User = require("../model/User.model");
 
 exports.addLocation = async (req, res) => {
   try {
-    // extract location details from the request body
     const { name, latitude, longitude } = req.body;
-    // extract the user's ID
+
     const { _id } = req.user;
 
-    // update the user with new location details
     const updatedUser = await User.findByIdAndUpdate(
       _id,
       {
@@ -52,14 +50,12 @@ exports.addLocation = async (req, res) => {
 
 exports.editLocation = async (req, res) => {
   try {
-    // extract the user's ID
     const { _id } = req.user;
-    // extract location id from path parameter
+
     const { locationId } = req.params;
-    // extract the location details from the request body
+
     const { name: newLocationName } = req.body;
 
-    // update the user with new location details
     const updatedUser = await User.findOneAndUpdate(
       { _id, "locations._id": locationId },
       {
@@ -70,7 +66,6 @@ exports.editLocation = async (req, res) => {
       { new: true }
     );
 
-    // if the location is not found
     if (!updatedUser) {
       return res.status(404).json({
         message: "Location not found",
@@ -92,12 +87,10 @@ exports.editLocation = async (req, res) => {
 
 exports.deleteLocation = async (req, res) => {
   try {
-    // extract the user's ID
     const { _id } = req.user;
-    // extract location details from the request body
+
     const { locationId } = req.params;
 
-    // update the user with new location details
     const location = await User.findOneAndUpdate(
       { _id, "locations._id": locationId },
       {
@@ -108,7 +101,6 @@ exports.deleteLocation = async (req, res) => {
       { new: true }
     );
 
-    // if the location is not found
     if (!location) {
       return res.status(404).json({
         message: "Location not found",
@@ -130,24 +122,20 @@ exports.deleteLocation = async (req, res) => {
 
 exports.getLocationCsvData = async (req, res) => {
   try {
-    // retrieve the user and locations:
     const { _id } = req.user;
     const user = await User.findById(_id);
     const { locations } = user;
 
-    // format the location data for CSV:
     const formattedData = locations.map((location) => ({
       Name: location.name,
       Latitude: location.latitude,
       Longitude: location.longitude,
     }));
 
-    // generate the CSV string
     const csv = parser.unparse(formattedData, {
       header: true,
     });
 
-    // set the response headers and send CSV:
     res.header("Content-Type", "text/csv");
     res.status(200).send(csv);
   } catch (error) {
@@ -157,7 +145,3 @@ exports.getLocationCsvData = async (req, res) => {
     });
   }
 };
-
-// ENTITY;
-//noti
-//chat

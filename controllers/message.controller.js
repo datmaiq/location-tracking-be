@@ -1,8 +1,6 @@
-// message.controller.js
 const Message = require("../model/Message.model");
 
 exports.createMessage = async (req, res) => {
-  // create a new message
   const newMessage = new Message(req.body);
 
   try {
@@ -14,18 +12,14 @@ exports.createMessage = async (req, res) => {
   }
 };
 
-// get all the messages of a chat based on the chat id
 exports.getMessages = async (req, res) => {
   try {
-    // find all the messages where the chat id is equal to the chat id passed in the params
     const messages = await Message.find({
       chatId: req.params.chatId,
     });
 
-    // send the messages with a 200 status code
     res.status(200).json(messages);
   } catch (err) {
-    // send the error with a 500 status code
     res.status(500).json(err);
   }
 };
@@ -35,7 +29,6 @@ exports.deleteMessage = async (req, res) => {
     const { _id: userId } = req.user;
     const { messageId } = req.params;
 
-    // Find the message to ensure it exists and the user is authorized to delete it
     const message = await Message.findById(messageId);
 
     if (!message) {
@@ -55,7 +48,6 @@ exports.deleteMessage = async (req, res) => {
       });
     }
 
-    // Delete the message
     await Message.findByIdAndDelete(messageId);
 
     res.status(200).json({
