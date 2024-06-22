@@ -5,13 +5,13 @@
   "engines": {
     "node": "*"
   },
-  "main": "app.js",
+  "main": "src/app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "node src/app.js",
     "heroku-postbuild": "npm install && npm run build",
     "client": "npm start",
-    "build": "npm run build",
-    "server": "nodemon app.js",
+    "build": "babel src -d dist",
+    "server": "nodemon src/app.js",
     "lint": "eslint ./*.js --fix"
   },
   "author": "Dat Mai",
@@ -32,6 +32,9 @@
     "socket.io": "^4.7.5"
   },
   "devDependencies": {
+    "@babel/cli": "^7.24.7",
+    "@babel/core": "^7.24.7",
+    "@babel/preset-env": "^7.24.7",
     "eslint": "^8.55.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.29.0",
