@@ -6,8 +6,9 @@ exports.autocomplete = async (req, res) => {
     searchKey
   )}&format=json`;
   try {
+    console.log("ok")
     const response = await axios.get(url, { headers: { 'User-Agent': 'LocationTracking/1.0' }  });
-    console.log(response.request.headers)
+    console.log(response)
     const transformedData = response.data.map((location) => ({
       latitude: location.lat,
       longitude: location.lon,
