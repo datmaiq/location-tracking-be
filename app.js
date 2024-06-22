@@ -11,6 +11,7 @@ const friendsRouter = require("./routes/friends.router");
 const messageRouter = require("./routes/message.router");
 const chatRouter = require("./routes/chat.router");
 const usersRouter = require("./routes/users.router");
+const imagesRouter = require("./routes/images.router");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -52,6 +53,7 @@ app.use("/friends", friendsRouter);
 app.use("/messages", messageRouter);
 app.use("/chat", chatRouter);
 app.use("/users", usersRouter);
+app.use("/images", imagesRouter);
 
 io.on("connection", (socket) => {
   console.log("a user connected");
