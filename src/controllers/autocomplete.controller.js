@@ -5,10 +5,11 @@ exports.autocomplete = async (req, res) => {
   const url = `https://nominatim.openstreetmap.org/search?addressdetails=1&q=${encodeURIComponent(
     searchKey
   )}&format=json`;
-
+  const headers = {
+    'User-Agent': 'LocationTrackingBE/1.0.0'
+  };
   try {
-    const response = await axios.get(url);
-
+    const response = await axios.get(url, {headers});
     const transformedData = response.data.map((location) => ({
       latitude: location.lat,
       longitude: location.lon,
