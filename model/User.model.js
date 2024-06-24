@@ -1,10 +1,5 @@
 const mongoose = require("mongoose");
-
-const locationSchema = new mongoose.Schema({
-  name: { type: String },
-  latitude: { type: Number, required: true },
-  longitude: { type: Number, required: true },
-});
+const locationSchema = require("./Location.model");
 
 const userSchema = new mongoose.Schema(
   {
