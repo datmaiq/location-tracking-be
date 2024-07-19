@@ -8,8 +8,12 @@ const { authMiddleware } = require("../middlewares/auth.middleware");
 
 const router = express.Router();
 
-router.post("/", createNewChat);
-router.get("/:userId", getChatByUserId);
-router.get("/:firstUserId/:secondUserId", getChatBetweenTwoUsers);
+router.post("/", authMiddleware, createNewChat);
+router.get("/:userId", authMiddleware, getChatByUserId);
+router.get(
+  "/:firstUserId/:secondUserId",
+  authMiddleware,
+  getChatBetweenTwoUsers
+);
 
 module.exports = router;

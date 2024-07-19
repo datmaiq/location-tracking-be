@@ -23,6 +23,7 @@ const getImage = (req, res) => {
       let readStream = gfs.createReadStream({ _id: fileId });
       readStream.pipe(res);
     } else {
+      ``;
       res.json("File Not Found");
     }
   });
