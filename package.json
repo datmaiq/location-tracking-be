@@ -10,7 +10,6 @@
     "start": "node app.js",
     "heroku-postbuild": "npm install && npm run build",
     "client": "npm start",
-    "build": "npm run build",
     "server": "nodemon app.js",
     "lint": "eslint ./*.js --fix"
   },
