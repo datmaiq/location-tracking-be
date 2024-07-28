@@ -6,11 +6,11 @@ const {
   getMessages,
   deleteMessage,
 } = require("../controllers/message.controller");
-const { authMiddleware } = require("../middlewares/auth.middleware");
+
 const router = express.Router();
 
-router.post("/", authMiddleware, createMessage);
-router.get("/:chatId", authMiddleware, getMessages);
-router.delete("/:messageId", authMiddleware, deleteMessage);
+router.post("/", createMessage);
+router.get("/:chatId", getMessages);
+router.delete("/:messageId", deleteMessage);
 
 module.exports = router;

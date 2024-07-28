@@ -4,15 +4,14 @@ const {
   getChatByUserId,
   getChatBetweenTwoUsers,
 } = require("../controllers/chat.controller");
-const { authMiddleware } = require("../middlewares/auth.middleware");
 
 const router = express.Router();
 
-router.post("/", authMiddleware, createNewChat);
-router.get("/:userId", authMiddleware, getChatByUserId);
+router.post("/", createNewChat);
+router.get("/:userId", getChatByUserId);
 router.get(
   "/:firstUserId/:secondUserId",
-  authMiddleware,
+
   getChatBetweenTwoUsers
 );
 
